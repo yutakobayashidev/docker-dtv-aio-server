@@ -231,6 +231,18 @@ services:
       timeout: 10s
       retries: 3
 
+  file-transfer-init:
+    build:
+      context: ./src/FileTransferInit
+    container_name: file-transfer-init
+    volumes:
+      - ./src/ConfigSetup/EDCB/RecEnd.sh:/app/RecEnd.sh
+      - tv-record-data:/record/TV-Record
+    depends_on:
+      file-transfer-server:
+        condition: service_healthy
+    restart: no
+
   # ==================== ↓↓↓↓↓ ここからユーザー設定 ↓↓↓↓↓ ====================
   # NFS サーバーコンテナを追加する設定
   # Linux クライアントから NFS マウントで録画フォルダにアクセスしたい場合に利用します。
