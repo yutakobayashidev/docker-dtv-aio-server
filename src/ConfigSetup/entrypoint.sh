@@ -24,6 +24,7 @@ mkdir -p ./config/EDCB/bat
 cp ./ConfigSetup/EDCB/Common.ini ./config/EDCB/Common.ini
 cp ./ConfigSetup/EDCB/EpgDataCap_Bon.ini ./config/EDCB/EpgDataCap_Bon.ini
 cp ./ConfigSetup/EDCB/RecEnd.sh ./config/EDCB/RecEnd.sh
+cp ./ConfigSetup/EDCB/EDCBNotifier.yaml ./config/EDCB/EDCBNotifier.yaml
 python3 main.py -t "./ConfigSetup/EDCB/EpgTimerSrv.template.ini" -o ./config/EDCB/EpgTimerSrv.ini
 
 # KonomiTV設定ファイルの準備
