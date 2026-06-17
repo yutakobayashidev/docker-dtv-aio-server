@@ -108,7 +108,8 @@ services:
   edcb:
     container_name: EDCB
     build:
-      context: ./src/EDCB
+      context: ./src
+      dockerfile: ./EDCB/Dockerfile
     ports:
       - "5510:5510"
     expose:
@@ -125,8 +126,11 @@ services:
       - ./config/EDCB/EpgTimerSrv.ini:/var/local/edcb/EpgTimerSrv.ini
       - ./config/EDCB/bat:/var/local/edcb/bat
       - ./config/EDCB/RecEnd.sh:/var/local/edcb/RecEnd.sh:ro
+      - ./config/EDCB/EDCBNotifier.yaml:/var/local/edcb/EDCBNotifier/EDCBNotifier.yaml
       - ./src/EDCB/healthcheck.sh:/var/local/edcb/healthcheck.sh:ro
       - mirakurun-socket:/var/run/mirakurun
+    environment:
+      TZ: Asia/Tokyo
     depends_on:
       mirakurun:
         condition: service_healthy
@@ -174,7 +178,9 @@ services:
       - tv-encode-data:/host-rootfs/record/TV-Encode
       - tv-capture-data:/host-rootfs/record/TV-Capture
       - ./config/KonomiTV/config.yaml:/code/config.yaml
-      - ./src/KonomiTV/healthcheck.sh:/code/server/healthcheck.sh:so
+      - ./config/KonomiTV/cert/cert.pem:/code/cert.pem:ro
+      - ./config/KonomiTV/cert/key.pem:/code/key.pem:ro
+      - ./src/KonomiTV/healthcheck.sh:/code/server/healthcheck.sh:ro
     healthcheck:
       test: [CMD, /bin/bash, healthcheck.sh]
       interval: 5m

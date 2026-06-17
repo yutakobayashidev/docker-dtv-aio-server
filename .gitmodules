@@ -20,3 +20,6 @@
 [submodule "src/Mirakurun/Mirakurun"]
 	path = src/Mirakurun/Mirakurun
 	url = https://github.com/fa0311/Mirakurun
+[submodule "src/EDCBNotifier"]
+	path = src/EDCBNotifier
+	url = https://github.com/tsukumijima/EDCBNotifier

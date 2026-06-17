@@ -1,0 +1,26 @@
+general:
+    notify_type: ['Discord']
+    notify_event: ['PostAddReserve', 'PostChgReserve', 'PostRecStart', 'PostRecEnd', 'PostNotify']
+    notify_image: null
+    title_hashtag: {}
+    logging: true
+
+discord:
+    webhook_url: 'https://discord.com/api/webhooks/your_webhook_url_here'
+
+message:
+    PostAddReserve:
+        - '📢 予約追加: $SDYYYY$/$SDMM$/$SDDD$($SDW$) $ServiceNameHankaku$ $ServiceNameHashTag$'
+        - '$STHH$:$STMM$～$ETHH$:$ETMM$ $TitleHankaku$ $TitleHashTag$'
+    PostChgReserve:
+        - '📢 予約変更: $SDYYYY$/$SDMM$/$SDDD$($SDW$) $ServiceNameHankaku$ $ServiceNameHashTag$'
+        - '$STHH$:$STMM$～$ETHH$:$ETMM$ $TitleHankaku$ $TitleHashTag$'
+    PostRecStart:
+        - '🔴 録画開始: $SDYYYY$/$SDMM$/$SDDD$($SDW$) $ServiceNameHankaku$ $ServiceNameHashTag$'
+        - '$STHH$:$STMM$～$ETHH$:$ETMM$ $TitleHankaku$ $TitleHashTag$'
+    PostRecEnd:
+        - '⏹️ 録画終了: $SDYYYY$/$SDMM$/$SDDD$($SDW$) $ServiceNameHankaku$ $ServiceNameHashTag$'
+        - '$STHH$:$STMM$～$ETHH$:$ETMM$ $TitleHankaku$ $TitleHashTag$'
+        - 'Drop: $Drops$ Scramble: $Scrambles$ Comment: $Result$'
+    PostNotify:
+        - '🔔 更新通知: $NotifyName$ ($TimeMM$/$TimeDD$ $TimeHH$:$TimeII$:$TimeSS$)'
