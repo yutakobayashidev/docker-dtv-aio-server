@@ -1,0 +1,62 @@
+--- a/EDCBNotifier/Utils.py
++++ b/EDCBNotifier/Utils.py
+@@ -1,6 +1,7 @@
+ 
+ import colorama
+ import datetime
++from datetime import timedelta
+ import jaconv
+ import os
+ import sys
+@@ -141,6 +142,10 @@ class Utils:
+             'TimeII': time.strftime('%M'),
+             'TimeI': str(int(time.strftime('%M'))),
+             'TimeSS': time.strftime('%S'),
+             'TimeS': str(int(time.strftime('%S'))),
++
++            # Linux 環境で EDCB が提供するマクロ
++            'StartTime': environ.get('StartTime', macro_default),
++            'DurationSecond': environ.get('DurationSecond', macro_default),
+         }
+ 
++        # Linux では EDCB が従来の時間マクロを削除し、代わりに StartTime (ISO8601) と DurationSecond を提供する。
++        # StartTime をパースして従来の時間マクロ (SDYYYY, STHH, EDYYYY, ETHH など) を生成する。
++        start_time_str = environ.get('StartTime', None)
++        if start_time_str and start_time_str != macro_default:
++            try:
++                start_dt = datetime.datetime.fromisoformat(start_time_str)
++
++                duration_str = environ.get('DurationSecond', '0')
++                duration_sec = int(duration_str) if duration_str not in (macro_default, '') else 0
++                end_dt = start_dt + timedelta(seconds=duration_sec)
++
++                weekdays = ['日', '月', '火', '水', '木', '金', '土']
++
++                def set_date_macros(prefix, dt):
++                    macro_table[prefix + 'YYYY'] = dt.strftime('%Y')
++                    macro_table[prefix + 'YY'] = dt.strftime('%y')
++                    macro_table[prefix + 'MM'] = dt.strftime('%m')
++                    macro_table[prefix + 'M'] = str(dt.month)
++                    macro_table[prefix + 'DD'] = dt.strftime('%d')
++                    macro_table[prefix + 'D'] = str(dt.day)
++                    macro_table[prefix + 'W'] = weekdays[dt.weekday()]
++
++                def set_time_macros(prefix, dt):
++                    macro_table[prefix + 'HH'] = dt.strftime('%H')
++                    macro_table[prefix + 'H'] = str(dt.hour)
++                    macro_table[prefix + 'MM'] = dt.strftime('%M')
++                    macro_table[prefix + 'M'] = str(dt.minute)
++                    macro_table[prefix + 'SS'] = dt.strftime('%S')
++                    macro_table[prefix + 'S'] = str(dt.second)
++
++                set_date_macros('SD', start_dt)
++                set_time_macros('ST', start_dt)
++                set_date_macros('ED', end_dt)
++                set_time_macros('ET', end_dt)
++
++                macro_table['EndTime'] = end_dt.strftime('%Y-%m-%dT%H:%M:%S')
++
++            except Exception:
++                pass
++
+         return macro_table

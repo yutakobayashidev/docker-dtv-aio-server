@@ -78,7 +78,8 @@ RUN apt-get update && \
     ca-certificates \
     curl \
     python3 \
-    python3-pip && \
+    python3-pip \
+    patch && \
     rm -rf /var/lib/apt/lists/*
 
 # Python 依存パッケージをインストール
@@ -104,6 +105,10 @@ COPY ./EDCBNotifier/EDCBNotifier/SendLINE.py /var/local/edcb/EDCBNotifier/
 COPY ./EDCBNotifier/EDCBNotifier/SendTwitter.py /var/local/edcb/EDCBNotifier/
 COPY ./EDCBNotifier/EDCBNotifier/SendMastodon.py /var/local/edcb/EDCBNotifier/
 COPY ./EDCBNotifier/EDCBNotifier/Utils.py /var/local/edcb/EDCBNotifier/
+# EDCBNotifier の Linux 対応パッチを適用 (StartTime/DurationSecond マクロ対応)
+COPY ./EDCB/EDCBNotifier-linux.patch /tmp/EDCBNotifier-linux.patch
+RUN patch -d /var/local/edcb -p1 < /tmp/EDCBNotifier-linux.patch && \
+    rm /tmp/EDCBNotifier-linux.patch
 COPY ./EDCB/EDCBNotifier/EDCBNotifier.yaml /var/local/edcb/EDCBNotifier/EDCBNotifier.default.yaml
 COPY ./EDCB/EDCBNotifier/PostAddReserve.sh /var/local/edcb/EDCBNotifier/
 COPY ./EDCB/EDCBNotifier/PostChgReserve.sh /var/local/edcb/EDCBNotifier/
